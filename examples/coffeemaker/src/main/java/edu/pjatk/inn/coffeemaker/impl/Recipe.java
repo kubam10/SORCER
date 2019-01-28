@@ -7,7 +7,15 @@ import sorcer.service.ContextException;
 import java.io.Serializable;
 
 /**
- * @author   Sarah & Mike
+*  COPYRIGHT (C) INN.
+*  Classes to support coffe making
+*  Homework Inn H2
+ * @author Cezary Szymkiewicz, Jakub Malyszek, Pawel Wojtasiak
+*  @version 1.01 2019-28-01
+*/
+
+/**
+ *@class defining Recipe model for coffemaker
  */
 public class Recipe implements Serializable {
     private String name;
@@ -17,6 +25,9 @@ public class Recipe implements Serializable {
     private int amtSugar;
     private int amtChocolate;
     
+    /**
+     * @constructor contructor that defines object of Recipie.
+     */
     public Recipe() {
     	this.name = "";
     	this.price = 0;
@@ -32,7 +43,10 @@ public class Recipe implements Serializable {
     public int getAmtChocolate() {
 		return amtChocolate;
 	}
+    
     /**
+     * Method that sets value of amtChocolate if parameter 
+     * is higher or equal 0
 	 * @param amtChocolate   The amtChocolate to setValue.
 	 */
     public void setAmtChocolate(int amtChocolate) {
@@ -40,13 +54,17 @@ public class Recipe implements Serializable {
 			this.amtChocolate = amtChocolate;
 		} 
 	}
+    
     /**
 	 * @return   Returns the amtCoffee.
 	 */
     public int getAmtCoffee() {
 		return amtCoffee;
 	}
+    
     /**
+     * Method that sets value of amtCoffee if parameter 
+     * is higher or equal 0
 	 * @param amtCoffee   The amtCoffee to setValue.
 	 */
     public void setAmtCoffee(int amtCoffee) {
@@ -54,13 +72,17 @@ public class Recipe implements Serializable {
 			this.amtCoffee = amtCoffee;
 		} 
 	}
+    
     /**
 	 * @return   Returns the amtMilk.
 	 */
     public int getAmtMilk() {
 		return amtMilk;
 	}
+    
     /**
+     * Method that sets value of amtMilk if parameter 
+     * is higher or equal 0
 	 * @param amtMilk   The amtMilk to setValue.
 	 */
     public void setAmtMilk(int amtMilk) {
@@ -68,13 +90,17 @@ public class Recipe implements Serializable {
 			this.amtMilk = amtMilk;
 		} 
 	}
+    
     /**
 	 * @return   Returns the amtSugar.
 	 */
     public int getAmtSugar() {
 		return amtSugar;
 	}
+    
     /**
+     * Method that sets value of amtSugar if parameter 
+     * is higher or equal 0
 	 * @param amtSugar   The amtSugar to setValue.
 	 */
     public void setAmtSugar(int amtSugar) {
@@ -82,13 +108,16 @@ public class Recipe implements Serializable {
 			this.amtSugar = amtSugar;
 		} 
 	}
+    
     /**
 	 * @return   Returns the name.
 	 */
     public String getName() {
 		return name;
 	}
+    
     /**
+     * Method that sets value of name if it's still null
 	 * @param name   The name to setValue.
 	 */
     public void setName(String name) {
@@ -96,20 +125,29 @@ public class Recipe implements Serializable {
     		this.name = name;
     	}
 	}
+    
     /**
 	 * @return   Returns the price.
 	 */
     public int getPrice() {
 		return price;
 	}
+    
     /**
+     * Method that sets value of amtSugar if parameter 
+     * is higher or equal 0
 	 * @param price   The price to setValue.
 	 */
     public void setPrice(int price) {
 		if (price >= 0) {
 			this.price = price;
 		} 
-	} 
+	}
+    
+    /**
+     * @return Returns bool if recipe has same name to actual.
+	 * @param price   The price to setValue.
+	 */
     public boolean equals(Recipe r) {
         if((this.name).equals(r.getName())) {
             return true;
@@ -119,7 +157,14 @@ public class Recipe implements Serializable {
     public String toString() {
     	return name;
     }
-
+    
+    /**
+     * Method that returns object of recipe by setting its
+     * fields from given context using metgods defined in this class
+     * @param context context to populate Recipe
+     * @return Returns object of Recipe class that is created with
+     * given context
+     */
 	static public Recipe getRecipe(Context context) throws ContextException {
 		Recipe r = new Recipe();
 		r.name = (String)context.getValue("name");
@@ -131,6 +176,12 @@ public class Recipe implements Serializable {
 		return r;
 	}
 
+	/**
+	 * Method that creates context from given recipe by
+	 * using methods returning its values.
+	 * @param recipe recipe that is source of values to get context
+	 * @return Returns object of Context class
+	 */
 	static public Context getContext(Recipe recipe) throws ContextException {
 		Context cxt = new ServiceContext();
 		cxt.putValue("name", recipe.getName());

@@ -72,73 +72,71 @@ public class RecipeTest {
     }
 
     @Test
-    public void testGetRecepies(){
-        int numberOfRecepies = coffeeMaker.getRecipes().length;
-
-        assertEquals(4,numberOfRecepies);
+    public void testGetAmtChocolate(){
+        assertEquals(0, espresso.getAmtChocolate());
     }
 
     @Test
-    public void testAddRecipe() {
-
+    public void testGetAmtCoffee(){
+        assertEquals(6, espresso.getAmtCoffee());
     }
 
     @Test
-    public void testDeleteRecipe() {
-
-        boolean fulltable[] = coffeeMaker.getRecipeFull();
-
-        for(int i =0; i < fulltable.length; i++ ){
-            assertEquals(false,fulltable[i]);
-        }
-        assertEquals(true, coffeeMaker.addRecipe(espresso));
-        assertEquals(true, coffeeMaker.deleteRecipe(espresso));
-        fulltable = coffeeMaker.getRecipeFull();
-
-        for(int i =0; i < fulltable.length; i++ ){
-            assertEquals(false,fulltable[i]);
-        }
-
-        assertEquals(true, coffeeMaker.addRecipe(espresso));
-        assertEquals(true, coffeeMaker.addRecipe(mocha));
-        assertEquals(true, coffeeMaker.addRecipe(test1));
-        assertEquals(true, coffeeMaker.addRecipe(test2));
-
-        fulltable = coffeeMaker.getRecipeFull();
-        for(int i =0; i < fulltable.length; i++ ){
-            assertEquals(true,fulltable[i]);
-        }
-
-        assertEquals(true, coffeeMaker.deleteRecipe(espresso));
-        assertEquals(true, coffeeMaker.deleteRecipe(mocha));
-        assertEquals(true, coffeeMaker.deleteRecipe(test1));
-        assertEquals(true, coffeeMaker.deleteRecipe(test2));
-
-        fulltable = coffeeMaker.getRecipeFull();
-        for(int i =0; i < fulltable.length; i++ ){
-            assertEquals(false,fulltable[i]);
-        }
+    public void testGetAmtMilk(){
+        assertEquals(1, espresso.getAmtMilk());
     }
 
     @Test
-    public void testEditRecipe() {
-        assertEquals(true, coffeeMaker.addRecipe(espresso));
-        assertEquals(true, coffeeMaker.addRecipe(mocha));
-        assertEquals(true, coffeeMaker.addRecipe(test1));
-        assertEquals(true, coffeeMaker.addRecipe(test2));
-        assertEquals(true, coffeeMaker.editRecipe(test2,test3));
-        assertEquals(test3, coffeeMaker.getRecipeForName(test3.getName()));
+    public void testGetAmtSugar(){
+        assertEquals(1, espresso.getAmtSugar());
     }
 
     @Test
-    public void testHandleNullRecipeName() {
-        coffeeMaker.addRecipe(espresso);
-        assertEquals(espresso.getName(),coffeeMaker.getRecipeForName("espresso").getName());
+    public void testSetAmtChocolate(){
+        espresso.setAmtChocolate(15);
+        assertEquals(15, espresso.getAmtChocolate());
 
-        assertEquals(null,coffeeMaker.getRecipeForName(""));
+        espresso.setAmtChocolate(-5);
+        assertEquals(15, espresso.getAmtChocolate());
 
-        Recipe r = coffeeMaker.getRecipeForName(null);
-        assertEquals(null,r.getName());
+        espresso.setAmtChocolate(0);
+        assertEquals(0, espresso.getAmtChocolate());
+    }
+
+    @Test
+    public void testSetAmtCoffee(){
+        espresso.setAmtCoffee(15);
+        assertEquals(15, espresso.getAmtCoffee());
+
+        espresso.setAmtCoffee(-5);
+        assertEquals(15, espresso.getAmtCoffee());
+
+        espresso.setAmtCoffee(0);
+        assertEquals(0, espresso.getAmtCoffee());
+    }
+
+    @Test
+    public void testSetAmtMilk(){
+        espresso.setAmtMilk(15);
+        assertEquals(15, espresso.getAmtMilk());
+
+        espresso.setAmtMilk(-5);
+        assertEquals(15, espresso.getAmtMilk());
+
+        espresso.setAmtMilk(0);
+        assertEquals(0, espresso.getAmtMilk());
+    }
+
+    @Test
+    public void testSetAmtSugar(){
+        espresso.setAmtSugar(15);
+        assertEquals(15, espresso.getAmtSugar());
+
+        espresso.setAmtSugar(-5);
+        assertEquals(15, espresso.getAmtSugar());
+
+        espresso.setAmtSugar(0);
+        assertEquals(0, espresso.getAmtSugar());
     }
 
 }

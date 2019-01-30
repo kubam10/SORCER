@@ -1,38 +1,47 @@
 1
 
-Maksymalna liczba recept to 3 w pliku
+Maksymalna liczba recept to 3 wedlug wymagan w pliku
 
-testAddRecipe linia 76 dodanie 4 recepty powinno zwróciæ false
+w CoffeMaker.java zmieniona wartosc NUM_RECIPES linia 25
 
-test to testAddRecipe()
+testAddRecipe() linia 84 dodanie 4 recepty powinno zwróciæ false
+
+test to CoffeMakerTest.java -> testAddRecipe()
 
 2
-usuniêty Recpie pozostaje w Tablicy recipeFull jako true; i nie kasujemy elementu
+usuniety obiekt Recpie pozostaje w Tablicy (recipeFull na tej pozyscji jest jako true) i nie kasujemy elementu
 
-usuniêcie Recepie w klasie CoffeMaker.java metoda public boolean deleteRecipe(Recipe r) 
+usuniecie Recepie w klasie CoffeMaker.java metoda public boolean deleteRecipe(Recipe r) dodanie:
 
-test to testDeleteRecipe() linia 99
+	                recipeArray[i] = new Recipe();
+	                recipeFull[i] = false;
+
+test to testDeleteRecipe() linia 100
 
 3
 
-addInventory w CoffeMaker.java linia 150 nie pozwala na dodanie cukru - nie akceptuje wartoœci powy¿ej 0
+addInventory w CoffeMaker.java linia 150 nie pozwala na dodanie cukru - nie akceptuje wartosci powyzej 0
+
+zmiana znaku w lini 150 CoffeMaker.java na         if(amtCoffee < 0 || amtMilk < 0 || amtSugar < 0 || amtChocolate < 0) {
 
 test to testAddInventory()
 
 4
 
 makeCoffe nie zmienia odpowiedniej liczby coffe w inventory 
-by³o inventory.setCoffee(inventory.getCoffee() + r.getAmtCoffee()); powinno byæ inventory.setCoffee(inventory.getCoffee() - r.getAmtCoffee());x
+bylo inventory.setCoffee(inventory.getCoffee() + r.getAmtCoffee()); powinno byc inventory.setCoffee(inventory.getCoffee() - r.getAmtCoffee());x
+
+linia 186
 
 test to MakeCoffe() 
 
 
 5
 
-editRecipe pozwala³ na zmianê nowego recpie z inna nazwa
+editRecipe pozwala na zmiane nowego recpie z inna nazwa
 
 w public boolean editRecipe(Recipe oldRecipe, Recipe newRecipe) zamienione  if(newRecipe.equals(recipeArray[i])) { na if(oldRecipe.equals(recipeArray[i])) {
 
-edit recipe po dodaniu maksymalnej iloœci Recipe edit siê nie powodzi poniewa¿ nie zwalniamy miejsca po edytowanym Recipe
+edit recipe po dodaniu maksymalnej ilosci Recipe edit sie nie powodzi poniewa¿ nie zwalniamy miejsca po edytowanym Recipe
 
 test to testEditRecipe()

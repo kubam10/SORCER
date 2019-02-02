@@ -9,15 +9,34 @@ import java.rmi.RemoteException;
 import java.sql.Date;
 
 /**
- * Created by Pawe³ Wojtasiak
+ * @author Pawe³ Wojtasiak
+ * @editor Cezary Szymkiewicz
  */
 public class OrderQueuingImpl implements OrderQueuing {
 
+	/*
+	 * Array of created orders
+	 */
 	private ArrayList<Date> ordersArray;
+	/*
+	 * Users wallet status
+	 */
 	private double usersWallet;
+	/*
+	 * Value describing if order is valid 
+	 */
 	private boolean canAddOrder = false;
+	/*
+	 * Adding minutes helper
+	 */
 	static final long ONE_MINUTE_IN_MILLIS=60000;
 	
+	/**
+	 * Returns context with notifications for CoffeMaker by checking 
+	 * if date of order is valid and if User has enought money in wallet
+	 * @param Context context
+	 * @return Context
+	 */
     @Override
     public Context QueOrder(Context context) throws RemoteException, ContextException {
     	
@@ -37,8 +56,8 @@ public class OrderQueuingImpl implements OrderQueuing {
     	 if(ordersArray != null) {
     		 if(!ordersArray.isEmpty()) {
     			 for(int i = 0 ; i < ordersArray.length; i++) {
-    				 long fiveMinutesBeforeNextOrder = ordersArray[i].getTime() - ONE_MINUTE_IN_MILLIS * 5;
-    				 long fiveMinutesAfterNextOrder =  ordersArray[i].getTime() + ONE_MINUTE_IN_MILLIS * 5;
+    				 long fiveMinutesBeforeNextOrder = addFiveMins(ordersArray[i]);
+    				 long fiveMinutesAfterNextOrder =  subtractFiveMins(ordersArray[i]);
     				 if(ordersArray[i].compareTo(order) != 0 && 
     						 (order.getTime() >= fiveMinutesAfterNextOrder || order.getTime() <= fiveMinutesBeforeNextOrder)) {
     					 canAddOrder = true;
@@ -69,5 +88,27 @@ public class OrderQueuingImpl implements OrderQueuing {
     		 context.putValue("coffeeMaker/orders", ordersArray)
     	 }
         return context;
+    }
+    
+    /**
+	 * Returns date with time needed to make new coffe.
+	 *
+	 * @return   Returns the long:plusFive.
+	 * @param Date date
+	 */
+    public long addFiveMins(Date date) {
+    	long plusFive = date.getTime() + ONE_MINUTE_IN_MILLIS * 5;
+    	return plusFive;
+    }
+    
+    /**
+	 * Returns date with time needed to make previous coffe.
+	 *
+	 * @return   Returns the minusFive.
+	 * @param Date date
+	 */
+    public long subtractFiveMins(Date date) {
+    	long minusFive = date.getTime() - ONE_MINUTE_IN_MILLIS * 5;
+    	return minusFive;
     }
 }

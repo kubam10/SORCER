@@ -31,7 +31,7 @@ public class CoffeemakerRequestor extends ServiceRequestor {
         }
         try {
             if (option.equals("netlet")) {
-                return (Exertion) evaluate(new File("src/main/netlets/coffeemaker-exertion-remote.ntl"));
+                return (Exertion) evaluate(new File("src/main/netlets/coffeemaker-exertion-ordering-nsh.ntl"));
             } else if (option.equals("model")) {
                 return createModel();
             } else if (option.equals("exertion")) {

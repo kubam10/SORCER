@@ -1,19 +1,29 @@
 package edu.pjatk.inn.coffeemaker.impl;
 
 import edu.pjatk.inn.coffeemaker.Delivery;
+import edu.pjatk.inn.coffeemaker.OrderQueuing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sorcer.service.Context;
 import sorcer.service.ContextException;
+import sorcer.service.MogramException;
 
 import java.util.*;
 import java.rmi.RemoteException;
 import java.sql.Date;
 
+import static sorcer.eo.operator.exert;
+import static sorcer.eo.operator.upcontext;
+
 /**
- * @author Pawe� Wojtasiak
+ * @author Paweł Wojtasiak
  * @editor Cezary Szymkiewicz
+ * @editor Jakub Małyszek
  */
 public class OrderQueuingImpl implements OrderQueuing {
 
+
+	private final static Logger logger = LoggerFactory.getLogger(OrderQueuing.class);
 	/*
 	 * Array of created orders
 	 */
@@ -38,27 +48,35 @@ public class OrderQueuingImpl implements OrderQueuing {
 	 * @return Context
 	 */
     @Override
-    public Context QueOrder(Context context) throws RemoteException, ContextException {
+    public Context queOrder(Context context) throws RemoteException, ContextException {
     	
-    	 ordersArray = new ArrayList<Date>(context.getValue("coffeeMaker/orders", currentOrders));
-    	 usersWallet = context.getValue("coffeeMaker/wallet", usersFunds)
-    			 
-    	 double price = (double)context.getValue("order/price", price)
+    	 ordersArray = (ArrayList<Date>) context.getValue("coffeeMaker/orders");
+    	 usersWallet = (double) context.getValue("coffeeMaker/wallet");
+
+		Context out = null;
+		try {
+			out = upcontext(exert(context));
+		} catch (MogramException e) {
+			e.printStackTrace();
+		}
+
+
+    	 double price = (double)context.getValue("order/price");
     	 if(usersWallet >= price) {
     		 canAddOrder = true;
     	 }
     	 else {
-    		 context.putValue("order/notification", "You don't have required funds on your account")
+    		 context.putValue("order/notification", "You don't have required funds on your account");
     		 return context;
     	 }
     	 
-		 Date order = (Date)context.getValue("order/date", date)
+		 Date order = (Date)context.getValue("order/date");
     	 if(ordersArray != null) {
     		 if(!ordersArray.isEmpty()) {
-    			 for(int i = 0 ; i < ordersArray.length; i++) {
-    				 long fiveMinutesBeforeNextOrder = addFiveMins(ordersArray[i]);
-    				 long fiveMinutesAfterNextOrder =  subtractFiveMins(ordersArray[i]);
-    				 if(ordersArray[i].compareTo(order) != 0 && 
+    			 for(int i = 0 ; i < ordersArray.size(); i++) {
+    				 long fiveMinutesBeforeNextOrder = addFiveMins(ordersArray.get(i));
+    				 long fiveMinutesAfterNextOrder =  subtractFiveMins(ordersArray.get(i));
+    				 if(ordersArray.get(i).compareTo(order) != 0 &&
     						 (order.getTime() >= fiveMinutesAfterNextOrder || order.getTime() <= fiveMinutesBeforeNextOrder)) {
     					 canAddOrder = true;
     				 }
@@ -68,24 +86,29 @@ public class OrderQueuingImpl implements OrderQueuing {
     				 }
     			 }
 		    	 if(canAddOrder) {
-	    			 ordersArray.add(order)
-		    		 context.putValue("order/notification", "Order is added")
+	    			 ordersArray.add(order);
+		    		 context.putValue("order/notification", "Order is added");
+					 context.putValue("coffeeMaker/wallet", usersWallet - price);
 		    	     context.putValue("coffeeMaker/orders", ordersArray);
 		    	 }
 		    	 else {
-		    		 context.putValue("order/notification", "Can't add order at this time")
+		    		 context.putValue("order/notification", "Can't add order at this time");
 		    	 }
     		 }
     		 else {
-    			 ordersArray.add(order)
-        		 context.putValue("coffeeMaker/orders", ordersArray)
+    			 ordersArray.add(order);
+				 context.putValue("order/notification", "Order is added");
+				 context.putValue("coffeeMaker/wallet", usersWallet - price);
+				 context.putValue("coffeeMaker/orders", ordersArray);
     		 }
         			 
     	 }
     	 else {
-    		 ordersArray = new ArrayList()<Date>();
-    		 ordersArray.add(order)
-    		 context.putValue("coffeeMaker/orders", ordersArray)
+    		 ordersArray = new ArrayList<Date>();
+    		 ordersArray.add(order);
+			 context.putValue("order/notification", "Order is added");
+    		 context.putValue("coffeeMaker/wallet", usersWallet - price);
+			 context.putValue("coffeeMaker/orders", ordersArray);
     	 }
         return context;
     }

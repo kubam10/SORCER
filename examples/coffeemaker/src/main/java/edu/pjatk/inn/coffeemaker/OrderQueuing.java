@@ -6,9 +6,9 @@ import sorcer.service.ContextException;
 import java.rmi.RemoteException;
 
 /**
- * Created by Pawe≥ Wojtasiak
+ * Created by Pawe≈Ç Wojtasiak
  */
 public interface OrderQueuing {
 
-    public Context QueOrder(Context context) throws RemoteException, ContextException;
+    public Context queOrder(Context context) throws RemoteException, ContextException;
 }

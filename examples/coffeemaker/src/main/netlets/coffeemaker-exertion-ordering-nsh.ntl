@@ -1,0 +1,28 @@
+#!/usr/bin/env nsh
+
+@Codebase(group='org.sorcer', module='coffeemaker', version='${sorcer.version}', classifier='dl')
+import edu.pjatk.inn.coffeemaker.OrderQueuing
+import edu.pjatk.inn.coffeemaker.CoffeeService
+
+Context presets = context(
+				proc("coffeeMaker/wallet", 150), 
+        		proc("coffeeMaker/orders",{"05-1-2019 12:07:00","05-2-2019 12:20:00","05-2-2019 12:30:00"}));
+
+Context espresso = context(proc("name", "espresso"), proc("price", 60),
+                proc("amtCoffee", 6), proc("amtMilk", 0),
+                proc("amtSugar", 1), proc("amtChocolate", 0));
+        
+Task order = task("order", sig("QueOrder", OrderQueuing.class), context(
+        proc("date","05-2-2019 13:00:00"),
+        proc("price", 60),
+        proc("notification");
+
+Task coffee = task("coffee", sig("makeCoffee", CoffeeService.class), context(
+        proc("recipe/name", "espresso"),
+        proc("coffee/paid", 60),
+        proc("coffee/change"),
+        proc("recipe", espresso)));
+        
+        
+job( order,coffee
+        pipe(outPoint(order, "order/notification"), inPoint(coffee, "coffee/change")));

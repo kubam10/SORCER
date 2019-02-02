@@ -160,7 +160,7 @@ public class CoffeeServiceTest {
 
 		Task coffee = task("coffee", sig("makeCoffee", CoffeeMaker.class), context(
 				inVal("recipe/name", "espresso"),
-				inVal("coffee/paid", 120),
+				inVal("coffee/paid", 60),
 				inVal("recipe", espresso)));
 
 		Task delivery = task("delivery", sig("deliver", DeliveryImpl.class), context(
@@ -168,6 +168,45 @@ public class CoffeeServiceTest {
 				inVal("room", "101")));
 
 		Job drinkCoffee = job(sig("exert", ServiceJobber.class), coffee, delivery);
+
+		Context out = upcontext(exert(drinkCoffee));
+
+		logger.info("out: " + out);
+	}
+
+	@Test
+	public void orderCoffeeAtTime() throws Exception {
+		Task queOrder = task("order", sig("queOrder", OrderQueuing.class), context(
+				inVal("coffeeMaker/wallet", 150),
+				inVal("order/date", "05-2-2019 13:00:00"),
+				inVal("order/price", 60),
+				outVal("order/notification")));
+
+		Job drinkCoffee = job(sig("exert", OrderQueuing.class), queOrder);
+
+		Context out = upcontext(exert(drinkCoffee));
+
+		logger.error("out: " + out);
+		//assertEquals(value(out, "order/notification"), "Order is added");
+	}
+
+	@Test
+	public void getCoffeeAtTime() throws Exception {
+
+
+		Task order = task("order", sig("QueOrder", OrderQueuing.class), context(
+				inVal("date", "05-2-2019 13:00:00"),
+				inVal("price", 60),
+				outPaths("order/notification")
+				));
+
+
+		Task coffee = task("coffee", sig("makeCoffee", CoffeeMaker.class), context(
+				inVal("recipe/name", "espresso"),
+				inVal("coffee/paid", 120),
+				inVal("recipe", espresso)));
+
+		Job drinkCoffee = job(sig("exert", ServiceJobber.class), order, coffee);
 
 		Context out = upcontext(exert(drinkCoffee));
 
